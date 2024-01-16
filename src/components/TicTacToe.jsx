@@ -1,8 +1,12 @@
 import React from 'react'
+import Board from './Board'
 
 function TicTacToe() {
   return (
-    <div>TicTacToe</div>
+    <div>
+      <h1>Tic Tac Toe</h1>
+      <Board />
+    </div>
   )
 }
 
