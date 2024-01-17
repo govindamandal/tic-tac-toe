@@ -1,9 +1,8 @@
 import React from 'react'
 
-function Tile({ className }) {
+function Tile({ className, value, onClick }) {
   return (
-    <div className={className}>
-        X
+    <div onClick={onClick} className={`tile ${className}`}>{value}
     </div>
   )
 }
