@@ -1,26 +1,32 @@
-import React, { useEffect, useState } from 'react'
-import Board from './Board';
-import GameOver from './GameOver';
-import GameState from '../GameState';
-import Reset from './Reset';
+import React, { useEffect, useState } from "react";
+import Board from "./Board";
+import GameOver from "./GameOver";
+import GameState from "../GameState";
+import Reset from "./Reset";
+import gameOverSoundAsset from "../sounds/game-over.wav";
+import clickSoundAsset from "../sounds/click.wav";
 
-const PLAYER_X = 'X';
-const PLAYER_O = 'O';
+const gameOverSound = new Audio(gameOverSoundAsset);
+gameOverSound.volume = 0.2;
+const clickSound = new Audio(clickSoundAsset);
+
+const PLAYER_X = "X";
+const PLAYER_O = "O";
 const winningCombinations = [
   // row
-  {combo: [0, 1, 2], strikeClass: 'strike-row-1'},
-  {combo: [3, 4, 5], strikeClass: 'strike-row-2'},
-  {combo: [6, 7, 8], strikeClass: 'strike-row-3'},
-  
+  { combo: [0, 1, 2], strikeClass: "strike-row-1" },
+  { combo: [3, 4, 5], strikeClass: "strike-row-2" },
+  { combo: [6, 7, 8], strikeClass: "strike-row-3" },
+
   //columns
-  {combo: [0, 3, 6], strikeClass: 'strike-column-1'},
-  {combo: [1, 4, 7], strikeClass: 'strike-column-2'},
-  {combo: [2, 5, 8], strikeClass: 'strike-column-3'},
+  { combo: [0, 3, 6], strikeClass: "strike-column-1" },
+  { combo: [1, 4, 7], strikeClass: "strike-column-2" },
+  { combo: [2, 5, 8], strikeClass: "strike-column-3" },
 
   // diagonal
-  {combo: [0, 4, 8], strikeClass: 'strike-diagonal-1'},
-  {combo: [2, 4, 6], strikeClass: 'strike-diagonal-2'},
-]
+  { combo: [0, 4, 8], strikeClass: "strike-diagonal-1" },
+  { combo: [2, 4, 6], strikeClass: "strike-diagonal-2" },
+];
 
 function checkWinner(tiles, setStrikeClass, setGameState) {
   for (const winningCombination of winningCombinations) {
@@ -44,7 +50,7 @@ function checkWinner(tiles, setStrikeClass, setGameState) {
   }
   const areAllTilesFilledIn = tiles.every((tile) => tile !== null);
   if (areAllTilesFilledIn) {
-    setGameState(GameState.draw); 
+    setGameState(GameState.draw);
   }
 }
 
@@ -68,7 +74,7 @@ function TicTacToe() {
     } else {
       setPlayerTurn(PLAYER_X);
     }
-  }
+  };
 
   function handleReset() {
     setGameState(GameState.inProgress);
@@ -81,6 +87,18 @@ function TicTacToe() {
     checkWinner(tiles, setStrikeClass, setGameState);
   }, tiles);
 
+  useEffect(() => {
+    if (tiles.some((tile) => tile !== null)) {
+      clickSound.play();
+    }
+  }, [tiles]);
+
+  useEffect(() => {
+    if (gameState !== GameState.inProgress) {
+      gameOverSound.play();
+    }
+  }, [gameState]);
+
   return (
     <div>
       <h1>Tic Tac Toe</h1>
@@ -90,10 +108,10 @@ function TicTacToe() {
         onTileClick={handleTileClick}
         strikeClass={strikeClass}
       />
-      <GameOver gameState={gameState}/>
+      <GameOver gameState={gameState} />
       <Reset gameState={gameState} onClickReset={handleReset} />
     </div>
-  )
+  );
 }
 
-export default TicTacToe
+export default TicTacToe;
